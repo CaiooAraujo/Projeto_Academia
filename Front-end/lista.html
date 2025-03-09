@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Alunos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Lista de Alunos</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Data de Nascimento</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaAlunos">
+                <!-- Dados dos alunos serão inseridos aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Carregar dados do localStorage
+        window.onload = function() {
+            let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+            let tabela = document.getElementById("tabelaAlunos");
+
+            alunos.forEach((aluno) => {
+                let row = tabela.insertRow();
+                row.insertCell(0).innerText = aluno.nome;
+                row.insertCell(1).innerText = aluno.dataNascimento;
+                row.insertCell(2).innerText = aluno.telefone;
+                row.insertCell(3).innerText = aluno.email;
+            });
+        }
+    </script>
+</body>
+</html>
