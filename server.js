@@ -18,6 +18,9 @@ const pool = new Pool({
 // Middleware para ler dados do formulário HTML
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Aqui é onde o Express vai servir arquivos estáticos (imagem, CSS, etc)
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Servir o arquivo HTML quando acessar "/"
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -39,6 +42,7 @@ app.post('/cadastrar', async (req, res) => {
   }
 });
 
+console.log("Pasta pública servida em:", path.join(__dirname, 'public'));
 app.listen(port, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${port}`);
 });
