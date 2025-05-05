@@ -9,6 +9,73 @@
     <script type="text/javascript" src=script.js></script>
 
     <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+
+    nav {
+      background-color: #000;
+      padding: 10px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .video-banner {
+      position: relative;
+      overflow: hidden;
+      height: 400px;
+    }
+
+    .video-banner video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(60%);
+    }
+
+    .banner-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+    }
+
+    .banner-content h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .banner-content p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .banner-content a {
+      background: #ff2d55;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
 
         body {
             background-color: rgba(47, 47, 124, 0.641);
@@ -152,6 +219,46 @@
     </style>
 </head>
 <body>
+
+<!-- Banner 1 -->
+<section class="video-banner">
+    <video autoplay muted loop>
+      <source src="videos/treino-funcional.mp4" type="video/mp4">
+      Seu navegador não suporta vídeo.
+    </video>
+    <div class="banner-content">
+      <h2>Corpo em Movimento</h2>
+      <p>Treinos funcionais para ganhar resistência, força e agilidade</p>
+      <a href="planos.html">Veja nossos planos</a>
+    </div>
+  </section>
+
+  <!-- Banner 2 -->
+  <section class="video-banner">
+    <video autoplay muted loop>
+      <source src="videos/treino-peso.mp4" type="video/mp4">
+      Seu navegador não suporta vídeo.
+    </video>
+    <div class="banner-content">
+      <h2>Ganhe Massa Muscular</h2>
+      <p>Equipamentos modernos e suporte profissional</p>
+      <a href="cliente.html">Área do cliente</a>
+    </div>
+  </section>
+
+  <!-- Banner 3 -->
+  <section class="video-banner">
+    <video autoplay muted loop>
+      <source src="videos/yoga-relax.mp4" type="video/mp4">
+      Seu navegador não suporta vídeo.
+    </video>
+    <div class="banner-content">
+      <h2>Equilíbrio Corpo & Mente</h2>
+      <p>Aulas de yoga, pilates e relaxamento para o seu bem-estar</p>
+      <a href="eventos.html">Ver calendário</a>
+    </div>
+  </section>
+
 <div id="myNav" class="overlay">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     
@@ -222,30 +329,7 @@
                 <a href="cadastro.html" class="btn-contratar">Contratar agora</a>
             </div>
         </div>
-        <div class="banner-container">
-            <div>
-                <div class="banner">
-                    <img src="https://i.pinimg.com/736x/5a/36/4c/5a364c7c24bd73fbea088e6500cad19a.jpg" alt="Musculação">
-                    <div class="text">Musculação é uma modalidade que usa aparelhos fixos e pesos livres. O aluno terá todos os aparelhos na academia à sua disposição.</div>
-                </div>
-                <div class="banner-title">Musculação</div>
-            </div>
-            <div>
-                <div class="banner">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLzJkh_SvWK0OM06qK-0HAUxSxKYtJh0nXxg&s" alt="Cardio">
-                    <div class="text">O Cardio visa adquirir resistência física através do fortalecimento do sistema cardiovascular com exercícios de baixa e alta intensidade.</div>
-                </div>
-                <div class="banner-title">Cárdio</div>
-            </div>
-            <div>
-                <div class="banner">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwybhrUKhPRCAxFPVzhC87Zn0gTDeh3auu9A&s" alt="Lutas">
-                    <div class="text">Temos Boxes, Karatê, Jiu-jitsu, Capoeira, Kung Fu e Taekwondo.</div>
-                </div>
-                <div class="banner-title">Lutas</div>
-            </div>
-        </div>
-        <div class="divider"></div>
+    <div class="divider"></div>
         <h1>Entre em contato</h1>
         <div class="contact-info">
             <div class="contact-item">
@@ -272,5 +356,8 @@
             menu.classList.toggle('open'); // Alterna a classe "open" para abrir/fechar
         }
     </script>
+    <footer>
+        <p>&copy; 2025 Academia Impacta. Todos os direitos reservados.</p>
+    </footer>
 </body>
 </html>
