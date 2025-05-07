@@ -1,24 +1,80 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>Cadastro de Aluno</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .resultado-imc {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h2>Cadastro de Aluno</h2>
-    <form action="/cadastrar" method="POST">
+    <form action="http://localhost:3000/cadastrar" method="POST" id="form-cadastro">
       <label>Nome: <input type="text" name="nome" required></label><br><br>
       <label>Data de Nascimento: <input type="date" name="data_nascimento" required></label><br><br>
       <label>Telefone: <input type="text" name="telefone" required></label><br><br>
       <label>Email: <input type="email" name="email" required></label><br><br>
-      <label>Altura (m): <input type="number" name="altura" step="0.01" required></label><br><br>
-      <label>Peso (kg): <input type="number" name="peso" step="0.01" required></label><br><br>
+      <label>Altura (m): <input type="number" name="altura" id="altura" step="0.01" required></label><br><br>
+      <label>Peso (kg): <input type="number" name="peso" id="peso" step="0.01" required></label><br><br>
+
+      <!-- Resultado do IMC -->
+      <div id="resultado-imc" class="resultado-imc"></div>
+      <input type="hidden" name="imc" id="imc">
+      <input type="hidden" name="classificacao" id="classificacao">
+
       <button type="submit">Cadastrar</button>
     </form>  
-    <!-- Botão para voltar para a página inicial -->
+
     <a href="index.html" class="btn-voltar">Voltar para o início</a>
   </div>
+
+  <script>
+    const form = document.getElementById("form-cadastro");
+    const alturaInput = document.getElementById("altura");
+    const pesoInput = document.getElementById("peso");
+    const imcField = document.getElementById("imc");
+    const classificacaoField = document.getElementById("classificacao");
+    const resultadoDiv = document.getElementById("resultado-imc");
+
+    function calcularIMC() {
+      const peso = parseFloat(pesoInput.value);
+      const altura = parseFloat(alturaInput.value);
+
+      if (!peso || !altura) {
+        resultadoDiv.textContent = "";
+        return;
+      }
+
+      const imc = peso / (altura * altura);
+      imcField.value = imc.toFixed(2);
+
+      let classificacao = "";
+      if (imc < 18.5) classificacao = "Magreza";
+      else if (imc < 25) classificacao = "Normal";
+      else if (imc < 30) classificacao = "Sobrepeso";
+      else if (imc < 35) classificacao = "Obesidade grau I";
+      else if (imc < 40) classificacao = "Obesidade grau II";
+      else classificacao = "Obesidade grau III";
+
+      classificacaoField.value = classificacao;
+      resultadoDiv.textContent = `IMC: ${imc.toFixed(2)} - ${classificacao}`;
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();  // Impede o envio imediato do formulário
+      calcularIMC();           // Chama a função de cálculo
+      form.submit();           // Envia o formulário manualmente após o cálculo
+    });
+    
+    alturaInput.addEventListener("input", calcularIMC);
+    pesoInput.addEventListener("input", calcularIMC);
+  </script>
 </body>
 </html>
+
