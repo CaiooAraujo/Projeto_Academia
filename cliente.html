@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head></head>
+  <meta charset="UTF-8">
+  <title>Área do Cliente</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container { display: flex; padding: 20px; }
+    .info { width: 40%; padding-right: 20px; border-right: 1px solid #ccc; }
+    .painel { width: 60%; padding-left: 20px; }
+    .aba { margin-bottom: 10px; cursor: pointer; background: #eee; color: #000; padding: 8px; border-radius: 4px; }
+    .conteudo { display: none; margin-bottom: 20px; background: #f0f4f8; color: #111; padding: 10px; border-radius: 4px; border: 2px solid #3498db; min-height: 80px; }
+    .item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    button { margin-left: 10px; }
+    .salvar-btn { background: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+    .dados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 10px; }
+    .card { background-color: #f0f0f0; padding: 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 14px; color: #333; }
+  </style>
+</head>
+<body>
+  <h2>Bem-vindo à sua Área do Cliente</h2>
+  <div class="container">
+    <div class="info">
+  <h3>PERFIL DO ALUNO</h3>
+  <div class="dados-grid">
+    <div class="card"><strong>Nome:</strong><br><span id="nomeUsuario"></span></div>
+    <div class="card"><strong>Email:</strong><br><span id="emailUsuario"></span></div>
+    <div class="card"><strong>Data de Nascimento:</strong><br><span id="nascimentoUsuario"></span></div>
+    <div class="card"><strong>Peso:</strong><br><span id="pesoUsuario"></span> kg</div>
+    <div class="card"><strong>Altura:</strong><br><span id="alturaUsuario"></span> m</div>
+    <div class="card"><strong>IMC:</strong><br><span id="imcUsuario"></span></div>
+    <div class="card"><strong>Classificação:</strong><br><span id="classificacaoUsuario"></span></div>
+  </div>
+</div>
+
+    <div class="painel">
+      <div class="aba" onclick="toggle('treinos')">Lista de Treinos</div>
+      <div id="treinos" class="conteudo">
+        <div id="lista-treinos"></div>
+        <input type="text" id="novoTreino" placeholder="Novo exercício">
+        <button onclick="adicionarItem('treino')">Adicionar</button>
+      </div>
+
+      <div class="aba" onclick="toggle('suplementos')">Lista de Suplementação</div>
+      <div id="suplementos" class="conteudo">
+        <div id="lista-suplementos"></div>
+        <input type="text" id="novoSuplemento" placeholder="Novo suplemento">
+        <button onclick="adicionarItem('suplemento')">Adicionar</button>
+      </div>
+
+      <button class="salvar-btn" onclick="salvarPreferencias()">Salvar Preferências</button>
+    </div>
+  </div>
+
+  <script>
+    function toggle(id) {
+      const elem = document.getElementById(id);
+      elem.style.display = elem.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Carregar dados do usuário
+    let usuarioId = null;
+
+    fetch('/dados-usuario')
+      .then(res => res.json())
+      .then(dados => {
+        document.getElementById('nomeUsuario').textContent = dados.nome;
+        document.getElementById('emailUsuario').textContent = dados.email;
+        document.getElementById('nascimentoUsuario').textContent = dados.data_nascimento;
+        document.getElementById('pesoUsuario').textContent = dados.peso;
+        document.getElementById('alturaUsuario').textContent = dados.altura;
+        document.getElementById('imcUsuario').textContent = dados.imc;
+        document.getElementById('classificacaoUsuario').textContent = dados.classificacao;
+        usuarioId = dados.id;
+
+        carregarPreferencias();
+      })
+      .catch(err => {
+        console.error("Erro ao carregar dados do usuário:", err);
+        alert("Erro ao carregar dados do usuário. Faça login novamente.");
+        window.location.href = "/login.html";
+      });
+
+    // Carregar treinos e suplementos salvos
+    function carregarPreferencias() {
+      fetch('/preferencias')
+        .then(res => res.json())
+        .then(dados => {
+          atualizarLista('treino', dados.treinos || []);
+          atualizarLista('suplemento', dados.suplementos || []);
+        });
+    }
+
+    function atualizarLista(tipo, itens) {
+      const lista = document.getElementById(`lista-${tipo === 'treino' ? 'treinos' : 'suplementos'}`);
+      lista.innerHTML = '';
+      itens.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `${item} <button onclick="removerItem('${tipo}', this)">Remover</button>`;
+        lista.appendChild(div);
+      });
+    }
+
+    function adicionarItem(tipo) {
+      const input = document.getElementById(tipo === 'treino' ? 'novoTreino' : 'novoSuplemento');
+      const lista = document.getElementById(`lista-${tipo === 'treino' ? 'treinos' : 'suplementos'}`);
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `${input.value} <button onclick="removerItem('${tipo}', this)">Remover</button>`;
+      lista.appendChild(div);
+      input.value = '';
+    }
+
+    function removerItem(tipo, botao) {
+      const div = botao.parentElement;
+      div.remove();
+    }
+
+    function salvarPreferencias() {
+      const treinos = Array.from(document.getElementById('lista-treinos').children).map(div => div.textContent.replace('Remover', '').trim());
+      const suplementos = Array.from(document.getElementById('lista-suplementos').children).map(div => div.textContent.replace('Remover', '').trim());
+
+      fetch('/salvar-preferencias', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ treinos, suplementos })
+      })
+      .then(res => res.text())
+      .then(msg => {
+        alert(msg);
+      })
+      .catch(err => {
+        console.error("Erro ao carregar dados do usuário:", err);
+        alert("Erro ao carregar dados do usuário. Faça login novamente.");
+        window.location.href = "/login.html";
+      });
+    }
+  </script>
+</body>
+</html>
+
